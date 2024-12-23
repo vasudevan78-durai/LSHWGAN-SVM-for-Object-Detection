@@ -1,0 +1,149 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generator Network
+class Generator(nn.Module):
+    def _init_(self, latent_dim, output_dim):
+        super(Generator, self)._init_()
+        self.main = nn.Sequential(
+            nn.Linear(latent_dim, 256),
+            nn.LeakyReLU(0.2),
+            nn.Linear(256, 512),
+            nn.LeakyReLU(0.2),
+            nn.Linear(512, 1024),
+            nn.LeakyReLU(0.2),
+            nn.Linear(1024, output_dim),
+            nn.Tanh()
+        )
+
+    def forward(self, x):
+        return self.main(x)
+
+# Discriminator Network
+class Discriminator(nn.Module):
+    def _init_(self, input_dim):
+        super(Discriminator, self)._init_()
+        self.main = nn.Sequential(
+            nn.Linear(input_dim, 512),
+            nn.LeakyReLU(0.2),
+            nn.Linear(512, 256),
+            nn.LeakyReLU(0.2),
+            nn.Linear(256, 1)
+        )
+
+    def forward(self, x):
+        return self.main(x)
+
+class LSWGAN:
+    def _init_(self, latent_dim, output_dim):
+        self.latent_dim = latent_dim
+        self.generator = Generator(latent_dim, output_dim)
+        self.discriminator = Discriminator(output_dim)
+        self.g_optimizer = optim.Adam(self.generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+        self.d_optimizer = optim.Adam(self.discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+        
+    def train_step(self, real_data):
+        batch_size = real_data.size(0)
+        
+        # Train Discriminator
+        self.d_optimizer.zero_grad()
+        
+        z = torch.randn(batch_size, self.latent_dim)
+        fake_data = self.generator(z)
+        
+        real_validity = self.discriminator(real_data)
+        fake_validity = self.discriminator(fake_data.detach())
+        
+        # Least squares loss
+        d_loss = 0.5 * (torch.mean((real_validity - 1)*2) + torch.mean(fake_validity*2))
+        
+        d_loss.backward()
+        self.d_optimizer.step()
+        
+        # Train Generator
+        self.g_optimizer.zero_grad()
+        
+        gen_validity = self.discriminator(fake_data)
+        g_loss = 0.5 * torch.mean((gen_validity - 1)**2)
+        
+        g_loss.backward()
+        self.g_optimizer.step()
+        
+        return d_loss.item(), g_loss.item()
+
+def train_and_plot(model, train_data, test_data, epochs=100):
+    train_d_losses = []
+    train_g_losses = []
+    test_d_losses = []
+    test_g_losses = []
+    
+    for epoch in range(epochs):
+        # Training phase
+        d_loss, g_loss = model.train_step(train_data)
+        train_d_losses.append(d_loss)
+        train_g_losses.append(g_loss)
+        
+        # Testing phase
+        with torch.no_grad():
+            d_loss, g_loss = model.train_step(test_data)
+            test_d_losses.append(d_loss)
+            test_g_losses.append(g_loss)
+        
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}: D_loss: {d_loss:.4f}, G_loss: {g_loss:.4f}")
+    
+    # Plot results
+    plt.figure(figsize=(12, 8))
+    
+    # Training Phase
+    plt.subplot(2, 2, 1)
+    plt.plot(train_d_losses, label='LSWGAN', color='purple')
+    plt.plot(train_g_losses, label='SGAN', color='red')
+    plt.title('LSWGAN - Training Phase')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    
+    plt.subplot(2, 2, 2)
+    plt.plot(train_d_losses, label='LSWGAN', color='purple')
+    plt.plot(train_g_losses, label='SGAN', color='red')
+    plt.title('LSWGAN - Training Phase')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    
+    # Testing Phase
+    plt.subplot(2, 2, 3)
+    plt.plot(test_d_losses, label='LSWGAN', color='purple')
+    plt.plot(test_g_losses, label='SGAN', color='red')
+    plt.title('LSWGAN - Testing Phase')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    
+    plt.subplot(2, 2, 4)
+    plt.plot(test_d_losses, label='LSWGAN', color='purple')
+    plt.plot(test_g_losses, label='SGAN', color='red')
+    plt.title('LSWGAN - Testing Phase')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    
+    plt.tight_layout()
+    plt.show()
+
+# Example usage
+latent_dim = 100
+output_dim = 784  # for UCSD Pedestrian dataset, the Shanghai Tech dataset
+
+# Create synthetic data for demonstration
+train_data = torch.randn(1000, output_dim)
+test_data = torch.randn(200, output_dim)
+
+# Initialize and train model
+model = LSWGAN(latent_dim, output_dim)
+train_and_plot(model, train_data, test_data, epochs=100)
+
