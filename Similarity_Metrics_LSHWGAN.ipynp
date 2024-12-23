@@ -1,0 +1,39 @@
+# Similarity Metrics using LSHWGAN
+
+# Similarity Metrics using LSHWGAN
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data to plot
+n_groups = 4
+means_precision = (80.23, 83.04, 92.34,94.62)
+means_recall = (80.34, 82.33,92.55,93.65)
+means_f1score = (80.22,86.34,93.15,96.81)
+
+# Create plot
+fig, ax = plt.subplots()
+index = np.arange(n_groups)
+bar_width = 0.25
+opacity = 0.8
+
+# Plot bars
+rects1 = plt.bar(index - bar_width, means_precision, bar_width,
+                 alpha=opacity, color='c', label='Precision')
+
+rects2 = plt.bar(index, means_recall, bar_width,
+                 alpha=opacity, color='m', label='Recall')
+
+rects3 = plt.bar(index + bar_width, means_f1score, bar_width,
+                 alpha=opacity, color='y', label='F1-Score')
+
+# Labels, title, and legend
+plt.xlabel('Models')
+plt.ylabel('Accuracy')
+plt.title('Similarity Metrics')
+plt.xticks(index, ('SGAN','DCGAN','LSGAN', 'LSHWGAN'))
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+

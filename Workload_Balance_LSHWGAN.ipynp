@@ -1,0 +1,62 @@
+# Workload balance of LSGAN Vs LSHWGAN
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data (Example data based on the image, replace with actual data)
+num_images = np.array([20, 40, 80, 120, 140, 200])
+num_features = np.array([5, 10, 15, 20, 25, 30])
+
+# Workload balance and other metrics for LSGAN and LSHWGAN (replace with actual data)
+workload_lsgan_images = np.array([5, 10, 15, 16, 18, 22])
+workload_lshwgan_images = np.array([4, 8, 12, 15, 17, 18])
+
+workload_lsgan_features = np.array([10, 15, 20, 25, 40, 50])
+workload_lshwgan_features = np.array([9, 12, 16, 22, 32, 36])
+
+balance_lsgan_images = np.array([0.5, 0.6, 0.65, 0.68, 0.7, 0.72])
+balance_lshwgan_images = np.array([0.45, 0.55, 0.6, 0.63, 0.65, 0.67])
+
+balance_lsgan_features = np.array([0.9, 0.92, 0.94, 0.94, 0.95, 0.97])
+balance_lshwgan_features = np.array([0.85, 0.89, 0.91, 0.93, 0.94, 0.95])
+
+# Create subplots (2x2 grid)
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+
+# Plot 1: Workload balance for number of images
+axs[0, 0].plot(num_images, workload_lsgan_images, label='LSGAN', marker='o', color='purple')
+axs[0, 0].plot(num_images, workload_lshwgan_images, label='LSHWGAN', marker='o', color='magenta')
+axs[0, 0].set_title('Workload vs Number of Images')
+axs[0, 0].set_xlabel('Number of Images')
+axs[0, 0].set_ylabel('Workload Balance')
+axs[0, 0].legend()
+
+# Plot 2: Workload balance for number of features
+axs[0, 1].plot(num_features, workload_lsgan_features, label='LSGAN', marker='o', color='purple')
+axs[0, 1].plot(num_features, workload_lshwgan_features, label='LSHWGAN', marker='o', color='magenta')
+axs[0, 1].set_title('Workload vs Number of Feature Detections')
+axs[0, 1].set_xlabel('Number of Feature Detections')
+axs[0, 1].set_ylabel('Workload Balance')
+axs[0, 1].legend()
+
+# Plot 3: Workload balance for LSGAN vs LSHWGAN (Images)
+axs[1, 0].plot(num_images, balance_lsgan_images, label='LSGAN', marker='o', color='purple')
+axs[1, 0].plot(num_images, balance_lshwgan_images, label='LSHWGAN', marker='o', color='magenta')
+axs[1, 0].set_title('Balance vs Number of Images')
+axs[1, 0].set_xlabel('Number of Images')
+axs[1, 0].set_ylabel('Workload Balance')
+axs[1, 0].legend()
+
+# Plot 4: Workload balance for LSGAN vs LSHWGAN (Features)
+axs[1, 1].plot(num_features, balance_lsgan_features, label='LSGAN', marker='o', color='purple')
+axs[1, 1].plot(num_features, balance_lshwgan_features, label='LSHWGAN', marker='o', color='magenta')
+axs[1, 1].set_title('Balance vs Number of Feature Detections')
+axs[1, 1].set_xlabel('Number of Feature Detections')
+axs[1, 1].set_ylabel('Workload Balance')
+axs[1, 1].legend()
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plots
+plt.show()
+

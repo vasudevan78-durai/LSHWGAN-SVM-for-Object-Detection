@@ -1,0 +1,27 @@
+# Accuracy over Epochs using LSHWGAN
+
+import matplotlib.pyplot as plt
+
+# Sample data for accuracy and epochs
+epochs = list(range(1, 21))  # Example epoch numbers (1 to 20)
+accuracy = [0.5, 0.55, 0.6, 0.62, 0.65, 0.68, 0.7, 0.72, 0.75, 0.77,
+            0.78, 0.8, 0.82, 0.83, 0.85, 0.86, 0.88, 0.89, 0.9, 0.95]
+ # Example accuracy values
+
+# Plotting the accuracy vs epochs graph
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, accuracy, marker='o', color='b', label='Accuracy')
+plt.title('Model Accuracy over Epochs')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.grid(True)
+
+# Save the plot as an image
+plt.savefig('accuracy_vs_epochs.png')
+plt.show()
+
+
+
+
+

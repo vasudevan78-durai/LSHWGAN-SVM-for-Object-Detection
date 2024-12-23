@@ -1,0 +1,56 @@
+#Average Displacement Error (ADE) and Final Displacement Error (FDE
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Placeholder data for demonstration
+epochs = np.arange(0, 220, 10)
+lshwgan_train_ade = np.random.uniform(0.9, 0.7, len(epochs))  # Replace with actual training ADE data for LSGAN
+lsgan_train_ade = np.random.uniform(0.4, 0.5, len(epochs))   # Replace with actual training ADE data for SGAN
+lshwgan_test_ade = np.random.uniform(0.8, 0.6, len(epochs))   # Replace with actual testing ADE data for LSGAN
+lsgan_test_ade = np.random.uniform(0.3, 0.4, len(epochs))    # Replace with actual testing ADE data for SGAN
+
+lshwgan_train_fde = np.random.uniform(1.4, 1.6, len(epochs))  # Replace with actual training FDE data for LSGAN
+lsgan_train_fde = np.random.uniform(0.6, 0.7, len(epochs))   # Replace with actual training FDE data for SGAN
+lshwgan_test_fde = np.random.uniform(1.4, 1.6, len(epochs))   # Replace with actual testing FDE data for LSGAN
+lsgan_test_fde = np.random.uniform(0.6, 0.7, len(epochs))    # Replace with actual testing FDE data for SGAN
+
+# Plot configurations
+fig, axs = plt.subplots(2, 2, figsize=(10, 9))
+
+# Average Displacement Error (ADE) - Training
+axs[0, 0].plot(epochs, lshwgan_train_ade, color='purple', label='LSHWGAN')
+axs[0, 0].plot(epochs, lsgan_train_ade, color='maroon', label='SGAN')
+axs[0, 0].set_title("LSHWGAN - Training Phase")
+axs[0, 0].set_xlabel("EPOCHS")
+axs[0, 0].set_ylabel("ACCURACY")
+axs[0, 0].legend()
+
+# Final Displacement Error (FDE) - Training
+axs[0, 1].plot(epochs, lshwgan_train_fde, color='purple', label='LSHWGAN')
+axs[0, 1].plot(epochs, lsgan_train_fde, color='maroon', label='LSGAN')
+axs[0, 1].set_title("LSHWGAN - Training Phase")
+axs[0, 1].set_xlabel("EPOCHS")
+axs[0, 1].set_ylabel("ACCURACY")
+axs[0, 1].legend()
+
+# Average Displacement Error (ADE) - Testing
+axs[1, 0].plot(epochs, lshwgan_test_ade, color='purple', label='LSHWGAN')
+axs[1, 0].plot(epochs, lsgan_test_ade, color='maroon', label='LSGAN')
+axs[1, 0].set_title("LSHWGAN - Testing Phase")
+axs[1, 0].set_xlabel("EPOCHS")
+axs[1, 0].set_ylabel("ACCURACY")
+axs[1, 0].legend()
+
+# Final Displacement Error (FDE) - Testing
+axs[1, 1].plot(epochs, lshwgan_test_fde, color='purple', label='LSHWGAN')
+axs[1, 1].plot(epochs, lsgan_test_fde, color='maroon', label='LSGAN')
+axs[1, 1].set_title("LSHWGAN - Testing Phase")
+axs[1, 1].set_xlabel("EPOCHS")
+axs[1, 1].set_ylabel("ACCURACY")
+axs[1, 1].legend()
+
+# Adjust layout and display
+plt.tight_layout()
+plt.show()
+
